@@ -14,20 +14,6 @@ export const TransferButton = ({ tokenId }: { tokenId: number }) => {
   // 1. 获取当前账户地址 (使用 useConnection 而不是 useConnection)
   const { address, isConnected } = useConnection();
 
-  // 2. 检查是否已授权给 OPERATOR_ADDRESS
-  const { data: isApprovedForAll } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: METER_ABI,
-    functionName: "isApprovedForAll",
-    args: [address!, CONTRACT_ADDRESS],
-    query: {
-      enabled: !!address && isConnected,
-      initialData: false,
-    },
-  });
-
-  console.log(isApprovedForAll);
-
   // 2. 使用 mutateAsync 并重命名为 writeContractAsync
   // 这样可以使用 await 等待签名完成，且不报错
   const { mutateAsync: writeContractAsync, isPending: isWritePending } =
