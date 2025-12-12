@@ -1,6 +1,8 @@
 // 你的合约地址
 export const CONTRACT_ADDRESS = "0x453c407197BecAE1F9ef00E244b923b5912254C3";
 
+export const STAKING_ADDRESS = "0x20da4fe5D57d7Ce6dC4A9Ea97C2DbC38CEA7a4D6";
+
 // 你的合约 ABI (已扩展授权功能)
 export const METER_ABI = [
   // 1. 查询元数据 URI (uri)
@@ -81,6 +83,39 @@ export const METER_ABI = [
     name: "safeBatchTransferFrom",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const;
+
+export const STAKING_ABI = [
+  {
+    inputs: [
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "stake",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "unstake",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "user", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+    ],
+    name: "getStakedBalance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
 ] as const;
