@@ -24,10 +24,10 @@ export default function LoginPage() {
   const router = useRouter();
 
   const { trigger } = useTypedMutation("/auth/login", postFetcher, {
-    onSuccess({ data }) {
+    onSuccess(data) {
       toast.success("Login successfully");
       localStorage.set("rvi.token", data.access_token);
-      router.replace(data.role === "admin" ? "/dashboard" : "/balance");
+      router.replace(data.role === "admin" ? "/assets" : "/balance");
     },
   });
 

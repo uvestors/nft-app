@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 // import localStorage from "../storage";
 import { toast } from "sonner";
 import { API_URL } from "@/constants";
+import localStorage from "../storage";
 
 interface RequestConfig extends AxiosRequestConfig {
   showToast?: boolean;
@@ -30,15 +31,12 @@ const getContentType = (type?: RequestConfig["method"]) => {
 // 发起请求的拦截中间件
 http.interceptors.request.use(
   function (config) {
-    // if (config.headers) {
-    //   const userToken = localStorage.get("userToken");
+    const userToken = localStorage.get("rvi.token");
+    if (userToken != null) {
+      config.headers.Authorization = `Bearer ${userToken}`;
+    }
 
     //   config.headers["Content-Type"] = getContentType(config.method);
-
-    //   if (userToken != null) {
-    //     config.headers.Authorization = `Bearer ${userToken}`;
-    //   }
-    // }
 
     return config;
   },
@@ -51,11 +49,13 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   function (response) {
     const { data, config } = response;
-    const { code, message } = data;
+    const { code, msg } = data;
     const { showToast = true } = config as RequestConfig;
 
+    console.log(44, data);
+
     if (code === 0) {
-      return data;
+      return data.data;
     }
 
     //  无效 token
@@ -67,21 +67,21 @@ http.interceptors.response.use(
 
     if (showToast) {
       toast.dismiss();
-      toast.error(message);
+      toast.error(msg);
     }
-    return Promise.reject(message);
+    return Promise.reject(msg);
   },
   function (error) {
     console.log(error);
     // invlid token 10000
     const { status, response } = error;
-    const { message } = response;
+    const { message, data } = response;
 
     // 请求错误，一般是参数不正确引起
     if (status === 400) {
       toast.dismiss();
-      toast.error(message);
-      return Promise.reject(message);
+      toast.error(data.msg);
+      return Promise.reject(data.msg);
     }
 
     return Promise.reject(error);

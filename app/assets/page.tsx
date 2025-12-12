@@ -23,22 +23,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* 顶部导航 (白底毛玻璃) */}
-      <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl">
-        <div className="container mx-auto flex h-16 items-center justify-between px-6 md:px-12">
-          {/* Logo 区域 */}
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">
-              R
-            </div>
-            <span className="text-xl font-bold tracking-tight text-gray-900">
-              RWA<span className="text-indigo-600">.Assets</span>
-            </span>
-          </div>
-          <ConnectKitButton mode="light" />
-        </div>
-      </header>
-
       {/* 主要内容区 */}
       <section className="container mx-auto px-6 py-12 md:px-12 md:py-16">
         {/* 页面标题区 */}
