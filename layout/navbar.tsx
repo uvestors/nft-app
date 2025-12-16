@@ -35,7 +35,7 @@ const Navbar = () => {
               <NavigationMenuLink href="/assets">Assets</NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href="/staking">Staking</NavigationMenuLink>
+              <NavigationMenuLink href="/activity">Activity</NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
