@@ -1,0 +1,218 @@
+{
+  "HomePage": {
+    "hero": {
+      "instituteName": "Real Value Institute",
+      "title1": "Advancing Real-World Asset",
+      "title2": "Tokenisation & Global Standards",
+      "subtitle": "Building Trust, Standards & Collaboration for Real-World Assets",
+      "desc1": "A neutral, non-profit institute dedicated to shaping the future of RWA.",
+      "desc2": "Connecting Australia’s high-quality assets with Asia’s fast-growing capital markets",
+      "btnLearn": "Learn More",
+      "btnPartner": "Partner With Us"
+    },
+    "about": {
+      "title": "About RVI",
+      "subtitle": "A Non-Profit Institute Dedicated to RWA Research & Ecosystem Development",
+      "desc": "RVI is an Australia-based non-profit organisation focused on advancing the future of digital finance through rigorous research and global collaboration.",
+      "quote": "We believe: Real value should be seen, trusted, and accessible globally.",
+      "cards": {
+        "research": {
+          "title": "Research",
+          "desc": "Advancing research on Real-World Assets (RWA)."
+        },
+        "standards": {
+          "title": "Standards",
+          "desc": "Building cross-border industry standards."
+        },
+        "ecosystem": {
+          "title": "Ecosystem",
+          "desc": "Coordinating an ecosystem of institutions, regulators, asset owners, and technology providers."
+        },
+        "compliance": {
+          "title": "Compliance",
+          "desc": "Supporting compliant, transparent and sustainable asset tokenization."
+        }
+      }
+    },
+    "strategy": {
+      "title": "The Strategic Rationale",
+      "desc": "Unlocking global value by connecting Australia's premium assets with Asia's dynamic capital through a trusted RWA framework.",
+      "rwa": {
+        "title": "Why RWA?",
+        "intro": "The world is entering the era of “value-backed digital finance.”",
+        "listTitle": "RWA creates:",
+        "list": [
+          "Global accessibility for high-quality assets",
+          "Transparent, auditable, legally compliant investment models",
+          "Cross-border capital efficiency",
+          "Lower risk and higher trust through regulatory alignment"
+        ],
+        "outro": "RWA is not a technology revolution — it is a trust revolution."
+      },
+      "australia": {
+        "title": "Why Australia?",
+        "intro": "Australia offers one of the world’s strongest environments for regulated RWA.",
+        "listTitle": "World-class real assets:",
+        "list": [
+          "Renewable energy (solar, wind)",
+          "Natural gas",
+          "Grid & infrastructure",
+          "Agriculture & livestock",
+          "Minerals (gold, copper, lithium)",
+          "Real estate",
+          "Carbon & environmental assets",
+          "Embedded network energy data"
+        ],
+        "outro": "These assets are: Stable, transparent, auditable, well-regulated — ideal for tokenisation."
+      },
+      "asia": {
+        "title": "Why Asia?",
+        "intro": "Asia is the fastest-growing capital region globally.",
+        "capitalTitle": "Asian capital is:",
+        "capitalList": [
+          "Large in scale",
+          "Fast moving",
+          "Demand-driven",
+          "Open to innovative investment products"
+        ],
+        "hubsTitle": "Hong Kong & Singapore are:",
+        "hubsList": [
+          "RWA regulatory sandbox centers",
+          "Asia’s digital asset issuance hubs",
+          "Global tokenisation financial gateways"
+        ],
+        "outro": "Australia supplies the assets. / Asia supplies the capital. RVI builds the bridge."
+      }
+    },
+    "mission": {
+      "title": "Our Mission",
+      "desc": "To build a neutral, trusted platform for global RWA standardisation.",
+      "servesTitle": "RVI serves as:",
+      "list": [
+        "An ecosystem co-builder",
+        "A standards participant",
+        "A neutral cross-border coordinator",
+        "A bridge between Australia and Asia",
+        "A research & education hub",
+        "A promoter of compliant and transparent tokenisation frameworks"
+      ],
+      "values": [
+        { "title": "Neutral", "desc": "Unbiased third-party institute" },
+        { "title": "Trusted", "desc": "Building industry confidence" },
+        { "title": "Non-Profit", "desc": "Dedicated to public benefit" }
+      ]
+    },
+    "services": {
+      "title": "What We Do",
+      "research": {
+        "title": "RWA Research & Standards Development",
+        "list": [
+          "Cross-border regulatory research",
+          "RWA classification frameworks",
+          "Standardisation of asset authenticity & on-chain verification",
+          "White papers & policy discussions"
+        ]
+      },
+      "ecosystem": {
+        "title": "Ecosystem Collaboration",
+        "list": [
+          "Partner with institutions across the value chain",
+          "Create the RWFF (Real World Finance Forum) alliance",
+          "Connect regulated service providers, asset owners & capital partners"
+        ]
+      },
+      "bridge": {
+        "title": "Australia ↔ Asia Cross-Border Bridge",
+        "list": [
+          "Help Asian institutions understand Australian assets",
+          "Help Australian industry understand RWA compliance frameworks",
+          "Facilitate compliant issuance & asset tokenisation pilot programs"
+        ]
+      },
+      "education": {
+        "title": "Education & Knowledge Hub",
+        "list": [
+          "Courses, workshops, industry panels",
+          "University collaboration",
+          "Research publications"
+        ]
+      }
+    },
+    "partners": {
+      "title": "Global Partnerships",
+      "desc": "Collaborating with leaders across the digital and physical asset spectrum.",
+      "cards": [
+        {
+          "title": "Academic & Research",
+          "text": "Universities & research bodies"
+        },
+        { "title": "Legal & Regulatory", "text": "Legal & regulatory experts" },
+        {
+          "title": "Asset Owners",
+          "text": "Energy, infrastructure, agriculture & mining"
+        },
+        {
+          "title": "Technology Partners",
+          "text": "Web3 & tokenisation technology companies"
+        },
+        {
+          "title": "Capital Partners",
+          "text": "Family offices & institutional capital"
+        },
+        { "title": "RWA Hubs", "text": "Hong Kong / Singapore RWA hubs" }
+      ],
+      "rwffTitle": "The RWFF Alliance",
+      "rwffDesc": "The Real World Finance Forum serves as the premier cross-border alliance, uniting industry leaders to enable seamless collaboration.",
+      "rwffBtn": "Join the Alliance"
+    },
+    "join": {
+      "title": "Global Ecosystem & Partnerships",
+      "subtitle": "Connecting the leaders of the real-world asset revolution.",
+      "rolesTitle": "Who Should Join?",
+      "rolesDesc": "Whether you are building the future of finance or managing world-class assets, RVI invites you to shape the future of real-world asset tokenisation.",
+      "formTitle": "Start the Conversation",
+      "formDesc": "Join our network of industry leaders and pioneers.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "typeLabel": "Organization Type",
+      "btnSubmit": "Join the RWA Ecosystem",
+      "roles": [
+        { "text": "Asset Owner" },
+        { "text": "Regulator" },
+        { "text": "Lawyer or Auditor" },
+        { "text": "Web3 Builder" },
+        { "text": "Investor" },
+        { "text": "University / Research" },
+        { "text": "Financial Institution" }
+      ]
+    },
+    "founder": {
+      "name": "Henry Xu",
+      "role": "Founder, Real Value Institute",
+      "tag": "RWA Strategy & Ecosystem Builder",
+      "quote1": "Australia holds some of the world’s most stable, transparent and high-quality assets, and they deserve global visibility.",
+      "quote2": "Our mission is not speculation but long-term, standards-based, regulatory-aligned industry development.",
+      "quote3": "RVI is here to help build a healthier, more transparent and trusted global RWA ecosystem."
+    },
+    "footer": {
+      "rights": "Real Value Institute. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    }
+  },
+  "Navigation": {
+    "about": "About",
+    "whyRwa": "Why RWA",
+    "mission": "Mission",
+    "services": "Services",
+    "contact": "Contact",
+    "join": "Join Ecosystem"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, zh {简体中文} en {English} other {English}}"
+  },
+  "LocaleLayout": {
+    "title": "RVI app"
+  }
+}
