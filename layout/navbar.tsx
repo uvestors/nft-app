@@ -37,6 +37,9 @@ const Navbar = () => {
             <NavigationMenuItem>
               <NavigationMenuLink href="/activity">Activity</NavigationMenuLink>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="/monitor">Monitor</NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex gap-2">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useRef } from "react";
-import { useAccount } from "wagmi"; // 推荐使用 useAccount 获取地址
+import { useAccount, useConnection } from "wagmi"; // 推荐使用 useAccount 获取地址
 import { useQuery } from "@tanstack/react-query";
 import { Layers, ShieldCheck, Wallet, Box, Loader2 } from "lucide-react";
 
@@ -111,9 +111,7 @@ const DashboardHeader = ({
 function AssetsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const activeTokenRef = useRef<TokenMetadata | null>(null);
-
-  // 使用 useAccount 获取地址，比 useConnection 更直接
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useConnection();
 
   // 数据获取逻辑
   const { data: ownedTokens = [], isLoading } = useQuery({
