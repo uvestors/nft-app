@@ -25,6 +25,8 @@ import dayjs from "dayjs";
 import StakeButton from "./components/stakeButton";
 import UnstakeButton from "./components/unstakeButton";
 import { serializateUrl } from "@/utils";
+import useSWRMutation from "swr/mutation";
+import { Button } from "@/components/ui/button";
 
 export const formatCurrency = (value: number | string) => {
   const num = Number(value);
@@ -81,6 +83,11 @@ const StakingPage = () => {
   const { data, mutate: refetchAssets } = useSWR(
     ["/staking/assets", { user_address: address }],
     address ? getFetcher<{ available: NFTData[]; staked: NFTData[] }> : null
+  );
+
+  const { trigger, isMutating: isLoading } = useSWRMutation(
+    ["/staking/claim", { user_address: address }],
+    address ? postFetcher : null
   );
 
   const availableAssets = data?.available;
@@ -174,15 +181,15 @@ const StakingPage = () => {
                     </span>
                   </div>
 
-                  {/* 按钮：深色按钮 */}
-                  <button
-                    disabled={
-                      !statData?.total_rewards || statData?.total_rewards <= 0
-                    }
+                  <Button
+                    onClick={() => {
+                      trigger({ user_address: address });
+                    }}
+                    disabled={!statData?.total_rewards || isLoading}
                     className="shrink-0 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-1.5 rounded-lg text-sm font-bold transition-all shadow-md active:scale-95"
                   >
                     Claim
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
