@@ -17,3 +17,8 @@ interface NftMetadata extends TokenMetadata {
   image: string;
   attributes: NftAttribute[];
 }
+
+interface NFTData {
+  token_id: string;
+  id: string;
+}

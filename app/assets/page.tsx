@@ -87,7 +87,7 @@ const DashboardHeader = ({
             </div>
 
             {/* 卡片 3: 收益预估 (占位符，增加氛围感) */}
-            <div className="hidden lg:flex min-w-[140px] items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-slate-100 opacity-60">
+            {/* <div className="hidden lg:flex min-w-[140px] items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-slate-100 opacity-60">
               <div className="p-2.5 bg-green-100 text-green-600 rounded-full">
                 <Wallet className="w-5 h-5" />
               </div>
@@ -99,7 +99,7 @@ const DashboardHeader = ({
                   --
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

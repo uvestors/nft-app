@@ -52,8 +52,6 @@ http.interceptors.response.use(
     const { code, msg } = data;
     const { showToast = true } = config as RequestConfig;
 
-    console.log(44, data);
-
     if (code === 0) {
       return data.data;
     }

@@ -166,7 +166,7 @@ const AssetsDetails = ({ data, onClose }: AssetsDetailsProps) => {
             </div>
           )}
           <div className="mt-auto flex items-center justify-end gap-4 border-t pt-6">
-            <StakeManager
+            {/* <StakeManager
               tokenId={tokenId!}
               isStaked={isStaked}
               isApproved={isApproved ?? false}
@@ -175,7 +175,7 @@ const AssetsDetails = ({ data, onClose }: AssetsDetailsProps) => {
                 refetchStakedStatus();
                 refetchApproval();
               }}
-            />
+            /> */}
             <Link
               target="_blank"
               href={serializateUrl(
