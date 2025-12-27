@@ -24,7 +24,8 @@ import clsx from "clsx";
 const MENU_ITEMS = [
   { label: "assets", value: "/assets" },
   { label: "staking", value: "/staking" },
-  { label: "staking activity", value: "/staking/history" },
+  { label: "activity", value: "/staking/history" },
+  { label: "rewards", value: "/rewards" },
   { label: "monitor", value: "/monitor" },
 ];
 
