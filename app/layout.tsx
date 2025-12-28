@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/web3Provider";
 import { Toaster } from "@/components/ui/sonner";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Web3Provider>{children}</Web3Provider>
         <Toaster />
       </body>
+      <GoogleAnalytics gaId="G-BZEGNH6N63" />
     </html>
   );
 }
