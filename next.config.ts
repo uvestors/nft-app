@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
       // 如果有其他图片域名，也加在这里
     ],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

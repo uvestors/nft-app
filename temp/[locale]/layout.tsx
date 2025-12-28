@@ -3,7 +3,7 @@ import { Locale, hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { clsx } from "clsx";
 import { Inter } from "next/font/google";
-import { routing } from "@/i18n/routing";
+import { routing } from "@/temp/i18n/routing";
 import Navbar from "@/components/navbar";
 import "./style.css";
 import Footer from "@/layout/footer";
