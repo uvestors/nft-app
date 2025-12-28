@@ -52,8 +52,8 @@ const Navbar = () => {
                     : "bg-transparent text-black/70"
                 )}
               >
-                <NavigationMenuLink href={item.value} className="capitalize">
-                  {item.label}
+                <NavigationMenuLink asChild className="capitalize">
+                  <Link href={item.value}>{item.label}</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
