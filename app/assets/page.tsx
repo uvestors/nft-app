@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useMemo, useState, useRef } from "react";
-import { useAccount, useConnection } from "wagmi"; // 推荐使用 useAccount 获取地址
+import { useConnection } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
 import { Layers, ShieldCheck, Wallet, Box, Loader2 } from "lucide-react";
 
 // 引入你现有的组件
-import NFTCard1 from "@/components/nftcard1";
+import NFTCard from "@/components/nftcard";
 import AssetsDetails from "./components/assetsDetails"; // 确保路径正确
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -17,6 +17,9 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import useSWR from "swr";
+import { getFetcher } from "@/utils/request/fetcher";
+import { serializateUrl } from "@/utils";
 
 // 定义 Token 数据结构 (根据你之前的代码推断)
 interface TokenMetadata {
@@ -107,25 +110,48 @@ const DashboardHeader = ({
   );
 };
 
+let pool: number[] = [];
+function getUniqueFromPool() {
+  if (pool.length === 0) {
+    pool = [0, 1, 2, 3, 4, 5];
+    pool.sort(() => Math.random() - 0.5);
+  }
+  return pool.pop();
+}
+
+const STYLE_POOL = [
+  { imageType: "cube", color: "from-slate-800 to-slate-600" },
+  { imageType: "wave", color: "from-indigo-900 via-purple-900 to-indigo-900" },
+  { imageType: "prism", color: "from-fuchsia-500 via-cyan-500 to-blue-500" },
+  { imageType: "gradient", color: "from-orange-400 via-pink-500 to-blue-600" },
+  { imageType: "circle", color: "from-emerald-400 to-cyan-600" },
+  { imageType: "dark", color: "from-gray-900 via-purple-900 to-black" },
+];
+
 // --- 主页面组件 ---
 function AssetsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const activeTokenRef = useRef<TokenMetadata | null>(null);
   const { address, isConnected } = useConnection();
+  const { data, isLoading } = useSWR(
+    address ? serializateUrl("/nft/list", { owner: address }) : null,
+    getFetcher
+  );
 
-  // 数据获取逻辑
-  const { data: ownedTokens = [], isLoading } = useQuery({
-    queryKey: ["ownedTokens", address],
-    queryFn: async () => {
-      if (!address) return [];
-      const response = await fetch(`/api/owned-tokens?address=${address}`);
-      if (!response.ok) throw new Error("Failed to fetch");
-      const data = await response.json();
-      return data as TokenMetadata[];
-    },
-    enabled: !!address, // 只有有地址时才请求
-    staleTime: 1000 * 10, // 10秒内数据不视为过期
-  });
+  const ownedTokens = React.useMemo(() => {
+    return (
+      data?.items.map((item) => {
+        const index = getUniqueFromPool();
+        const style = STYLE_POOL[index!];
+
+        return {
+          ...item,
+          imageType: style.imageType,
+          color: style.color,
+        };
+      }) || []
+    );
+  }, [data]);
 
   // 使用 useMemo 计算统计数据，避免重复计算
   const stats = useMemo(() => {
@@ -219,8 +245,8 @@ function AssetsPage() {
           // 状态 D: 展示列表
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {ownedTokens.map((item, index) => (
-              <NFTCard1
-                key={`${item.tokenId}-${index}`}
+              <NFTCard
+                key={`${item.token_id}-${index}`}
                 data={item}
                 onClick={handleToggle}
               />

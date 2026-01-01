@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
 import {
   useConnection,
+  useSimulateContract,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
@@ -41,6 +42,37 @@ const UnstakeButton = ({
       hash,
     });
 
+  const { data: simulateData, error: simulateError } = useSimulateContract({
+    address: STAKING_ADDRESS,
+    abi: STAKING_ABI,
+    functionName: "unstake",
+    args: tokenId ? [BigInt(tokenId), 1n] : undefined,
+    query: {
+      enabled: !!address && !!tokenId, // 只有在有地址和ID时才运行模拟
+    },
+  });
+
+  React.useEffect(() => {
+    // 优先显示模拟阶段的错误
+    const currentError = writeError || simulateError;
+    if (currentError) {
+      console.error("Unstake Error Details:", currentError);
+
+      // 提取核心错误信息，防止 [Object object]
+      const errorMessage =
+        currentError.shortMessage ||
+        currentError.cause?.message ||
+        currentError.message;
+
+      // 如果报错包含 'reverted', 通常说明是合约逻辑不通过（如锁定期未到）
+      if (errorMessage.includes("reverted")) {
+        toast.error(`Contract Error: ${errorMessage}`);
+      } else {
+        toast.error(`Transaction Failed: ${errorMessage}`);
+      }
+    }
+  }, [simulateError, writeError]);
+
   React.useEffect(() => {
     if (isConfirmed) {
       toast.success(`Unstake Meter #${tokenId} successful`);
@@ -61,12 +93,22 @@ const UnstakeButton = ({
   const handleClick = () => {
     if (!tokenId || !address) return;
 
-    write({
-      address: STAKING_ADDRESS,
-      abi: STAKING_ABI,
-      functionName: "unstake",
-      args: [BigInt(tokenId), 1n],
-    });
+    // try {
+    //   write(simulateData!.request);
+    // } catch (error) {
+    //   console.log("error", error);
+    // }
+
+    try {
+      write({
+        address: STAKING_ADDRESS,
+        abi: STAKING_ABI,
+        functionName: "unstake",
+        args: [BigInt(tokenId), 1n],
+      });
+    } catch (error) {
+      console.log("Unstake error", error);
+    }
   };
 
   const isLoading = isWritePending || isConfirming || isCheckingApproval;

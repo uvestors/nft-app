@@ -15,8 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RWA Smart Meter App",
-  description: "Demo for RWA asset visualization",
+  title: "RVI App",
 };
 
 export default function RootLayout({

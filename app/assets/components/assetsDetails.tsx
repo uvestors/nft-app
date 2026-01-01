@@ -20,7 +20,7 @@ interface AssetsDetailsProps {
 }
 
 const AssetsDetails = ({ data, onClose }: AssetsDetailsProps) => {
-  const tokenId = data?.tokenId;
+  const tokenId = data?.token_id;
   const { address } = useAccount();
 
   // 1. Authoritative staked status from blockchain (Single Source of Truth)
@@ -36,17 +36,17 @@ const AssetsDetails = ({ data, onClose }: AssetsDetailsProps) => {
   const isStaked = useMemo(() => (stakedBalance ?? 0n) > 0n, [stakedBalance]);
 
   // 2. Authoritative approval status from blockchain
-  const {
-    data: isApproved,
-    isLoading: isCheckingApproval,
-    refetch: refetchApproval,
-  } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: METER_ABI,
-    functionName: "isApprovedForAll",
-    args: [address!, STAKING_ADDRESS],
-    query: { enabled: !!address && !isStaked }, // Only check if not staked
-  });
+  // const {
+  //   data: isApproved,
+  //   isLoading: isCheckingApproval,
+  //   refetch: refetchApproval,
+  // } = useReadContract({
+  //   address: CONTRACT_ADDRESS,
+  //   abi: METER_ABI,
+  //   functionName: "isApprovedForAll",
+  //   args: [address!, STAKING_ADDRESS],
+  //   query: { enabled: !!address && !isStaked }, // Only check if not staked
+  // });
 
   // 读取合约
   const { data: uriResults, isLoading: isContractsLoading } = useReadContract({

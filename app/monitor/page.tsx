@@ -33,6 +33,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useAccount, useConnection } from "wagmi"; // ✨ 修正: 通常 address 来自 useAccount
 import { useRouter } from "next/navigation"; // ✨ 新增: 用于跳转
 import { Button } from "@/components/ui/button"; // ✨ 新增: 引入按钮组件
+import useSWR from "swr";
+import { serializateUrl } from "@/utils";
+import { getFetcher } from "@/utils/request/fetcher";
 
 // --- Chart.js 注册 ---
 ChartJS.register(
@@ -86,23 +89,17 @@ export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState<"1H" | "24H" | "7D">("1H"); // ✨ 新增: 时间状态
   const [secondsAgo, setSecondsAgo] = useState(0); // ✨ 新增: Sync 计时器
 
-  // --- 1. 获取真实拥有的 NFT 列表 ---
-  const { data: ownedTokens = [], isLoading } = useQuery({
-    queryKey: ["ownedTokens", address],
-    queryFn: async () => {
-      if (!address) return [];
-      const response = await fetch(`/api/owned-tokens?address=${address}`);
-      if (!response.ok) return []; // 防止 API 报错崩页面
-      const data = await response.json();
-      return data;
-    },
-    enabled: !!address,
-  });
+  const { data, isLoading } = useSWR(
+    address ? serializateUrl("/nft/list", { owner: address }) : null,
+    getFetcher
+  );
+
+  const ownedTokens = data?.items || [];
 
   // 默认选中第一个
   useEffect(() => {
     if (ownedTokens.length > 0 && !selectedTokenId) {
-      setSelectedTokenId(ownedTokens[0].tokenId);
+      setSelectedTokenId(ownedTokens[0].token_id);
     }
   }, [ownedTokens, selectedTokenId]);
 
@@ -381,8 +378,8 @@ export default function DashboardPage() {
                   className="bg-gray-50 border border-gray-200 text-slate-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 min-w-[150px] font-medium shadow-sm"
                 >
                   {ownedTokens.map((item) => (
-                    <option key={item.tokenId} value={item.tokenId}>
-                      Meter #{item.tokenId}
+                    <option key={item.token_id} value={item.token_id}>
+                      Meter #{item.token_id}
                     </option>
                   ))}
                 </select>

@@ -30,10 +30,10 @@ const MENU_ITEMS = [
 ];
 
 const Navbar = () => {
-  const { data } = useSWR(
-    "/users/me",
-    getFetcher<{ role: string; username: string }>
-  );
+  // const { data } = useSWR(
+  //   "/users/me",
+  //   getFetcher<{ role: string; username: string }>
+  // );
   const pathname = usePathname();
 
   return (
@@ -61,7 +61,7 @@ const Navbar = () => {
         </NavigationMenu>
         <div className="flex gap-2">
           <ConnectKitButton />
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar>
                 <AvatarImage
@@ -78,7 +78,7 @@ const Navbar = () => {
                 <DropdownMenuItem>Profile</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </header>
