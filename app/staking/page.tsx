@@ -29,9 +29,11 @@ import useSWRMutation from "swr/mutation";
 import { Button } from "@/components/ui/button";
 
 export const formatCurrency = (value: number | string) => {
-  const num = Number(value);
+  const num = Number(value) / 100;
 
   return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 10, // 最多保留 10 位小数
     useGrouping: false, // 不使用千分位逗号（可选，Crypto通常为了复制方便不加逗号）
