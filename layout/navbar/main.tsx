@@ -96,7 +96,7 @@ const MainNavbar = ({ className }: { className?: string }) => {
               );
             })}
             {/* <LocaleSwitcher /> */}
-            <Link href="/marketplace">
+            <Link href="/introduce">
               <Button
                 variant="ghost"
                 className="hidden md:flex gap-2 text-slate-700 hover:text-cyan-600 hover:bg-cyan-50 font-bold transition-all"
