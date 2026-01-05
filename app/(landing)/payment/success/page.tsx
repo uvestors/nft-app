@@ -45,10 +45,13 @@ const ORDER_DETAILS = {
 
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("orderId");
+  const sessionId = searchParams.get("session_id");
 
   // 获取订单详情
-  const { data } = useSWR(orderId ? `/orders/${orderId}` : null, getFetcher);
+  const { data } = useSWR(
+    sessionId ? `/orders/${sessionId}` : null,
+    getFetcher
+  );
 
   const [stripeReceiptUrl, setStripeReceiptUrl] = useState<string | null>(null);
 
