@@ -5,18 +5,21 @@ import {
   CheckCircle2,
   ArrowRight,
   Download,
-  Copy,
   Box as BoxIcon,
   Zap,
   Cpu,
   Loader2,
-  Check,
   Store,
   LayoutGrid,
   Info,
   ExternalLink,
+  Calendar,
+  Tag,
 } from "lucide-react";
 import { toast, Toaster } from "sonner";
+import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
+import { getFetcher } from "@/utils/request/fetcher";
 
 // --- Shared Style Constants ---
 const TEXT_GRADIENT =
@@ -25,38 +28,56 @@ const BTN_GRADIENT =
   "bg-gradient-to-r from-cyan-500 to-sky-600 hover:from-cyan-400 hover:to-sky-500";
 const CARD_SHADOW = "shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)]";
 
-// --- Mock Data ---
+// --- Mock Data (作为 Fallback) ---
 const ORDER_DETAILS = {
-  // Web3 风格：ID 可以稍微长一点，模拟 Hash 的感觉，或者保留原样
-  id: "0x7X99...28B1",
   date: new Date().toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   }),
   item: "Industrial Meter Node (Genesis Edition)",
-  amount: "$299.00",
-  paymentMethod: "Visa •••• 4242",
+  // 默认 fallback 数据
+  unitPrice: 29900, // 分 (cents)
+  quantity: 1,
+  currency: "USD",
+  id: "0x7X99...28B1",
 };
 
 export default function PaymentSuccessPage() {
-  const [copied, setCopied] = useState(false);
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
+
+  // 获取订单详情
+  const { data } = useSWR(orderId ? `/orders/${orderId}` : null, getFetcher);
 
   const [stripeReceiptUrl, setStripeReceiptUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    setTimeout(() => {
-      // setStripeReceiptUrl("https://pay.stripe.com/receipts/...");
-    }, 1000);
-  }, []);
-
-  const handleCopyRef = () => {
-    navigator.clipboard.writeText(ORDER_DETAILS.id);
-    setCopied(true);
-    // 修改文案：更通用的 Reference ID
-    toast.success("Transaction Ref copied to clipboard");
-    setTimeout(() => setCopied(false), 2000);
+  // 解析需要展示的数据 (优先使用 API 数据)
+  const displayData = {
+    date: data?.created_at
+      ? new Date(data.created_at).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+      : ORDER_DETAILS.date,
+    // quantity: data?.metadata?.quantity
+    //   ? parseInt(data.metadata.quantity)
+    //   : ORDER_DETAILS.quantity,
+    quantity: 1,
+    amountTotal:
+      data?.amount_total || ORDER_DETAILS.unitPrice * ORDER_DETAILS.quantity,
+    // 如果没有明确的单价，用总价除以数量
+    get unitPrice() {
+      return this.amountTotal / this.quantity;
+    },
   };
+
+  useEffect(() => {
+    if (data?.receipt_url) {
+      setStripeReceiptUrl(data.receipt_url);
+    }
+  }, [data]);
 
   const handleReceiptAction = () => {
     if (stripeReceiptUrl) {
@@ -64,6 +85,14 @@ export default function PaymentSuccessPage() {
     } else {
       window.print();
     }
+  };
+
+  // 简单的格式化辅助函数
+  const formatPrice = (amountInCents: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amountInCents / 100);
   };
 
   return (
@@ -89,41 +118,30 @@ export default function PaymentSuccessPage() {
             <div className="absolute -bottom-1 -left-3 w-3 h-3 bg-cyan-300 rounded-full animate-bounce delay-300"></div>
           </div>
 
-          {/* 修改文案：Web3 风格 - Transaction Confirmed */}
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
-            Transaction <span className={TEXT_GRADIENT}>Confirmed</span>
+            Payment Successful
           </h1>
           <p className="text-lg text-slate-500 font-medium max-w-lg mx-auto leading-relaxed">
-            Your transaction was successful. We are now initializing the minting
+            Your payment has been processed. We are now initializing the minting
             process for your node.
           </p>
         </div>
 
         {/* --- Main Receipt Card (打印核心区域) --- */}
         <div
-          className={`bg-white rounded-4xl border border-slate-100 ${CARD_SHADOW} overflow-hidden mb-8 print:shadow-none print:border print:rounded-none print:mb-0`}
+          className={`bg-white rounded-[2rem] border border-slate-100 ${CARD_SHADOW} overflow-hidden mb-8 print:shadow-none print:border print:rounded-none print:mb-0`}
         >
-          {/* Top: Digital Receipt Header */}
+          {/* Top: Header (Changed: Removed Hash, Added Date) */}
           <div className="bg-slate-50/50 p-6 md:p-8 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 print:bg-white print:border-b-2 print:border-slate-800">
             <div>
-              {/* 修改文案：Transaction Ref 比 Order Reference 更 Crypto */}
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                Transaction Ref
+                Order Date
               </p>
-              <div
-                className="flex items-center gap-2 group cursor-pointer"
-                onClick={handleCopyRef}
-              >
-                <span className="text-xl font-bold text-slate-900 font-mono tracking-tight">
-                  {ORDER_DETAILS.id}
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-slate-400" />
+                <span className="text-lg font-bold text-slate-900 font-mono tracking-tight">
+                  {displayData.date}
                 </span>
-                <div className="p-1.5 rounded-md bg-white border border-slate-200 text-slate-400 group-hover:text-sky-500 group-hover:border-sky-200 transition-colors print:hidden">
-                  {copied ? (
-                    <Check className="w-3.5 h-3.5" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
-                  )}
-                </div>
               </div>
             </div>
             <div className="print:hidden">
@@ -146,41 +164,73 @@ export default function PaymentSuccessPage() {
 
           {/* Middle: Item Details */}
           <div className="p-6 md:p-8">
-            <div className="flex items-start gap-5 mb-8">
+            <div className="flex flex-col sm:flex-row items-start gap-5 mb-8">
+              {/* Icon */}
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-sky-200 flex-shrink-0 print:border print:border-slate-200 print:shadow-none print:text-slate-800">
                 <Zap className="w-8 h-8" />
               </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-900 mb-1 leading-snug">
-                  {ORDER_DETAILS.item}
-                </h3>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50 border border-sky-100 text-[10px] font-bold text-sky-700 uppercase tracking-wider print:bg-white print:border-slate-300 print:text-slate-700">
-                    <Cpu className="w-3 h-3" /> Hardware V1
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-[10px] font-bold text-indigo-700 uppercase tracking-wider print:bg-white print:border-slate-300 print:text-slate-700">
-                    <BoxIcon className="w-3 h-3" /> Polygon
-                  </span>
+
+              {/* Product Info */}
+              <div className="flex-1 w-full">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900 mb-1 leading-snug">
+                      {ORDER_DETAILS.item}
+                    </h3>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mt-2 mb-3">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-50 border border-sky-100 text-[10px] font-bold text-sky-700 uppercase tracking-wider print:bg-white print:border-slate-300 print:text-slate-700">
+                        <Cpu className="w-3 h-3" /> Hardware V1
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-[10px] font-bold text-indigo-700 uppercase tracking-wider print:bg-white print:border-slate-300 print:text-slate-700">
+                        <BoxIcon className="w-3 h-3" /> Polygon
+                      </span>
+                    </div>
+                  </div>
+                  {/* Desktop Total Price */}
+                  <div className="text-right hidden sm:block print:block">
+                    <p className="text-2xl font-black text-slate-900 tracking-tight">
+                      {formatPrice(displayData.amountTotal)}
+                    </p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase">
+                      Paid via Stripe
+                    </p>
+                  </div>
+                </div>
+
+                {/* New: Unit Price & Quantity Row */}
+                <div className="flex items-center gap-4 py-3 border-t border-dashed border-slate-200 w-full mt-1">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-xs font-medium text-slate-500">
+                      Unit Price:
+                    </span>
+                    <span className="text-sm font-bold text-slate-700">
+                      {formatPrice(displayData.unitPrice)}
+                    </span>
+                  </div>
+                  <div className="w-px h-4 bg-slate-200"></div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-slate-500">
+                      Qty:
+                    </span>
+                    <span className="text-sm font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md">
+                      x{displayData.quantity}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="text-right hidden sm:block print:block">
-                <p className="text-2xl font-black text-slate-900 tracking-tight">
-                  {ORDER_DETAILS.amount}
-                </p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase">
-                  Paid via Stripe
-                </p>
-              </div>
-            </div>
 
-            {/* Mobile Price View (打印时隐藏) */}
-            <div className="sm:hidden flex justify-between items-center mb-6 pt-4 border-t border-slate-100 print:hidden">
-              <span className="text-sm font-bold text-slate-500">
-                Amount Paid
-              </span>
-              <span className="text-xl font-black text-slate-900">
-                {ORDER_DETAILS.amount}
-              </span>
+              {/* Mobile Total Price (Visible only on small screens) */}
+              <div className="sm:hidden flex justify-between items-center w-full pt-2 border-t border-slate-100 print:hidden">
+                <span className="text-sm font-bold text-slate-500">
+                  Total Paid
+                </span>
+                <span className="text-xl font-black text-slate-900">
+                  {formatPrice(displayData.amountTotal)}
+                </span>
+              </div>
             </div>
 
             {/* Minting Status Banner (打印时隐藏) */}
