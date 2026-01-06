@@ -2,7 +2,7 @@
 
 import { useReadContracts, useConnection } from "wagmi"; // 1. 引入 useAccount
 import { CONTRACT_ADDRESS, METER_ABI } from "@/config/contracts";
-import { NFTCard } from "@/components/nftcard";
+import NFTCard from "@/components/nftcard";
 import { ConnectKitButton } from "connectkit";
 import Link from "next/link";
 
