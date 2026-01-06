@@ -43,7 +43,7 @@ const ORDER_DETAILS = {
   id: "0x7X99...28B1",
 };
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
@@ -316,3 +316,11 @@ export default function PaymentSuccessPage() {
     </div>
   );
 }
+
+export default () => {
+  return (
+    <React.Suspense>
+      <PaymentSuccessPage />
+    </React.Suspense>
+  );
+};
