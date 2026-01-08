@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+// 1. Import Hook Form and SWR Mutation
+import { useForm } from "react-hook-form";
+import useSWRMutation from "swr/mutation";
 import {
   Menu,
   X,
@@ -21,15 +24,38 @@ import {
   Briefcase,
   Handshake,
   Zap,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
-// import LocaleSwitcher from "@/components/localeSwitcher";
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import MainNavbar from "@/layout/navbar/main";
+import { postFetcher } from "@/utils/request/fetcher";
+import { toast } from "sonner";
 
-// --- Particle Background Component ---
+// --- Types & Fetcher ---
+
+// Define the form data structure
+type FormData = {
+  email: string;
+  role: string;
+};
+
+// Mock API Fetcher for SWR Mutation
+async function sendContactRequest(url: string, { arg }: { arg: FormData }) {
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  // Simulate a success or error (randomly fail 10% of the time for demo)
+  if (Math.random() < 0.1) {
+    throw new Error("Network connection failed. Please try again.");
+  }
+
+  return { success: true, message: "Welcome to the ecosystem!" };
+}
+
+// ... [Keep ParticleNetwork component exactly as it was] ...
 const ParticleNetwork = () => {
+  // ... (ParticleNetwork code remains unchanged)
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -150,14 +176,42 @@ const ParticleNetwork = () => {
 
 // --- Main App Component ---
 export default function App() {
+  // 2. Setup React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>();
+
+  // 3. Setup SWR Mutation (for POST request)
+  // We use useSWRMutation because we want to trigger this manually on submit, not on mount
+  const { trigger, isMutating, data, error } = useSWRMutation(
+    "/contact",
+    postFetcher,
+    {
+      onSuccess() {
+        toast.success("Submit successful");
+      },
+    }
+  );
+
+  // 4. Form Submission Handler
+  const onSubmit = async (formData: FormData) => {
+    try {
+      await trigger(formData);
+      // Optional: Reset form on success
+      // reset();
+    } catch (e) {
+      console.error("Submission error", e);
+    }
+  };
+
   const text = {
     hero: {
       instituteName: "Real Value Institute",
-      // Updated Title 1: Moved "Asset" to the first line
       title1: "Advancing Real-World Asset",
-      // Updated Title 2: "Tokenisation" starts the second line
       title2: "Tokenisation & Global Standards",
-      // Updated Subtitle: Used JSX to force a line break on mobile only
       subtitle: (
         <>
           A neutral, non-profit institute <br className="block sm:hidden" />{" "}
@@ -191,7 +245,9 @@ export default function App() {
     <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-sky-100 selection:text-sky-900">
       <MainNavbar />
 
-      {/* SECTION 01: HERO */}
+      {/* ... [HERO, ABOUT, WHY TRILOGY, MISSION, SERVICES Sections remain unchanged] ... */}
+
+      {/* (Collapsing previous sections for brevity, paste them back here) */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Background Gradients */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-200/20 rounded-full blur-[100px] pointer-events-none"></div>
@@ -205,10 +261,6 @@ export default function App() {
               {text.hero.instituteName}
             </span>
           </div>
-          {/* UPDATED H1 Styles:
-            - text-3xl (mobile) -> text-5xl (tablet) -> text-7xl (desktop)
-            - This prevents the word breaking on mobile.
-          */}
           <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight text-slate-900">
             {text.hero.title1}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-blue-600 to-pink-500">
@@ -234,13 +286,6 @@ export default function App() {
             >
               {text.hero.btnPartner}
             </a>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center pt-2">
-            <div className="w-1 h-2 bg-slate-400 rounded-full"></div>
           </div>
         </div>
       </section>
@@ -601,7 +646,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* COMBINED SECTION: GLOBAL ECOSYSTEM */}
+      {/* COMBINED SECTION: GLOBAL ECOSYSTEM (With Updated Form) */}
       <section
         id="contact"
         className="py-24 bg-white relative border-t border-slate-200"
@@ -679,6 +724,7 @@ export default function App() {
 
           {/* PART 3: JOIN THE ECOSYSTEM */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24 items-center">
+            {/* ... [Who Should Join Section - Unchanged] ... */}
             <div>
               <div className="mb-8">
                 <h3 className="text-3xl font-bold text-slate-900 mb-4">
@@ -718,67 +764,155 @@ export default function App() {
               </div>
             </div>
 
+            {/* 5. UPDATED FORM SECTION */}
             <div className="relative">
               <div className="relative bg-white p-8 md:p-10 rounded-2xl border border-slate-200 shadow-2xl h-full flex flex-col justify-center">
-                <h3 className="text-2xl font-bold text-slate-900 mb-6">
-                  Start the Conversation
-                </h3>
-                <p className="text-slate-500 mb-8">
-                  Join our network of industry leaders and pioneers.
-                </p>
-
-                <form
-                  className="space-y-4"
-                  onSubmit={(e) => e.preventDefault()}
-                >
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all placeholder:text-slate-400"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
-                      Organization Type
-                    </label>
-                    <div className="relative">
-                      <select className="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all appearance-none cursor-pointer">
-                        <option>Select your role...</option>
-                        <option>Asset Owner</option>
-                        <option>Financial Institution</option>
-                        <option>Technology Partner</option>
-                        <option>Regulator</option>
-                        <option>Other</option>
-                      </select>
-                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 9l-7 7-7-7"
-                          ></path>
-                        </svg>
-                      </div>
+                {/* Success State */}
+                {data ? (
+                  <div className="text-center py-10">
+                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle2 size={32} />
                     </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                      Thank you!
+                    </h3>
+                    <p className="text-slate-500 mb-6">
+                      We have received your details and will be in touch soon.
+                    </p>
+                    <button
+                      onClick={() => reset(undefined, { keepValues: false })}
+                      className="text-sky-600 hover:text-sky-700 font-semibold text-sm hover:underline"
+                    >
+                      Submit another inquiry
+                    </button>
                   </div>
-                  <button className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-4 rounded-lg transition-all shadow-lg shadow-sky-200 mt-2 flex items-center justify-center gap-2 group">
-                    Join the RWA Ecosystem{" "}
-                    <ArrowRight
-                      size={18}
-                      className="group-hover:translate-x-1 transition-transform"
-                    />
-                  </button>
-                </form>
+                ) : (
+                  <>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-6">
+                      Start the Conversation
+                    </h3>
+                    <p className="text-slate-500 mb-8">
+                      Join our network of industry leaders and pioneers.
+                    </p>
+
+                    <form
+                      className="space-y-4"
+                      onSubmit={handleSubmit(onSubmit)}
+                    >
+                      {/* Email Field */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          disabled={isMutating}
+                          placeholder="Enter your email"
+                          {...register("email", {
+                            required: "Email is required",
+                            pattern: {
+                              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                              message: "Invalid email address",
+                            },
+                          })}
+                          className={`w-full bg-slate-50 border rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:ring-1 transition-all placeholder:text-slate-400
+                            ${
+                              errors.email
+                                ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                                : "border-slate-300 focus:border-sky-500 focus:ring-sky-500"
+                            }`}
+                        />
+                        {errors.email && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.email.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Role Field */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
+                          Organization Type
+                        </label>
+                        <div className="relative">
+                          <select
+                            disabled={isMutating}
+                            {...register("role", {
+                              required: "Please select an organization type",
+                            })}
+                            className={`w-full bg-slate-50 border rounded-lg px-4 py-3 text-slate-900 focus:outline-none focus:ring-1 transition-all appearance-none cursor-pointer
+                             ${
+                               errors.role
+                                 ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                                 : "border-slate-300 focus:border-sky-500 focus:ring-sky-500"
+                             }`}
+                          >
+                            <option value="">Select your role...</option>
+                            <option value="ASSET_OWNER">Asset Owner</option>
+                            <option value="FINANCIAL_INSTITUTION">
+                              Financial Institution
+                            </option>
+                            <option value="TECHNOLOGY_PARTNER">
+                              Technology Partner
+                            </option>
+                            <option value="REGULATOR">Regulator</option>
+                            <option value="OTHER">Other</option>
+                          </select>
+                          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              ></path>
+                            </svg>
+                          </div>
+                        </div>
+                        {errors.role && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.role.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* General Error Message */}
+                      {error && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-600 text-sm">
+                          <AlertCircle size={16} />
+                          <span>{error.message}</span>
+                        </div>
+                      )}
+
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={isMutating}
+                        className="w-full bg-sky-500 hover:bg-sky-600 disabled:bg-sky-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-lg transition-all shadow-lg shadow-sky-200 mt-2 flex items-center justify-center gap-2 group"
+                      >
+                        {isMutating ? (
+                          <>
+                            <Loader2 size={18} className="animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            Join the RWA Ecosystem{" "}
+                            <ArrowRight
+                              size={18}
+                              className="group-hover:translate-x-1 transition-transform"
+                            />
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </>
+                )}
               </div>
             </div>
           </div>
